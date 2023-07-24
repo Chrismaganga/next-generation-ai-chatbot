@@ -9,7 +9,7 @@ const config = new Configuration({
 
 const openai = new OpenAIApi(config);
 
-export const runtime = "edge";
+// export const runtime = "edge";
 
 export async function POST(req: Request) {
   const { messages } = await req.json();
@@ -19,6 +19,7 @@ export async function POST(req: Request) {
     stream: true,
     messages: messages,
   });
+  console.log('successful')
 
   const stream = OpenAIStream(response, {
     onCompletion:async (completion:string) => {

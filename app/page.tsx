@@ -1,4 +1,5 @@
 "use client";
+import { AiFillAndroid } from "react-icons/ai";
 
 import { useChat } from "ai/react";
 import { useEffect, useRef } from "react";
@@ -74,9 +75,10 @@ export default function Home() {
           ))}
         </div>
       ) : (
-        <div className="w-full flex justify-center pt-32">
-          <h1 className="font-bold text-3xl">
-            Please use the input filed below ⬇️
+        <div className="w-full flex justify-center pt-32 gap-5">
+          <AiFillAndroid className="text-white-900 ml-5 w-10 h-10 bg-gradient-to-r from-cyan-500 to-blue-500 rounded" />
+          <h1 className="font-bold text-3xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-md">
+            Please use the input below ⬇️
           </h1>
         </div>
       )}
