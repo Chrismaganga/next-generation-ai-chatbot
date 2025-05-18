@@ -6,116 +6,63 @@ import { useEffect, useRef } from "react";
 import Textarea from "react-textarea-autosize";
 
 export default function Home() {
-  const { messages, input, handleInputChange, handleSubmit } = useChat({
-    api: "/api",
-  });
-
-  const messageEndRef = useRef<HTMLInputElement>(null);
-
-  const scrollToBottom = () => {
-    messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
   return (
-    <div className="min-h-screen bg-neutral-800">
-      {messages.length !== 0 ? (
-        <div className="pb-32 pt-5 space-y-5 w-[75%] mx-auto relative">
-          {messages.map((message) => (
-            <div key={message.id} className="w-full">
-              {message.role === "user" ? (
-                <div className="flex  gap-x-2">
-                  <div className="bg-gray-500 h-12 w-12 rounded-lg">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                      className="w-full h-full text-white p-1"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </div>
-
-                  <p className="rounded-lg p-3 w-full border-gray-500 border-2 text-sm">
-                    {message.content}
-                  </p>
-                </div>
-              ) : (
-                <div className="flex gap-x-2">
-                  <div className="bg-teal-500 h-12 w-12 rounded-lg">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                      className="w-full h-full text-white p-1"
-                    >
-                      <path d="M16.5 7.5h-9v9h9v-9z" />
-                      <path
-                        fillRule="evenodd"
-                        d="M8.25 2.25A.75.75 0 019 3v.75h2.25V3a.75.75 0 011.5 0v.75H15V3a.75.75 0 011.5 0v.75h.75a3 3 0 013 3v.75H21A.75.75 0 0121 9h-.75v2.25H21a.75.75 0 010 1.5h-.75V15H21a.75.75 0 010 1.5h-.75v.75a3 3 0 01-3 3h-.75V21a.75.75 0 01-1.5 0v-.75h-2.25V21a.75.75 0 01-1.5 0v-.75H9V21a.75.75 0 01-1.5 0v-.75h-.75a3 3 0 01-3-3v-.75H3A.75.75 0 013 15h.75v-2.25H3a.75.75 0 010-1.5h.75V9H3a.75.75 0 010-1.5h.75v-.75a3 3 0 013-3h.75V3a.75.75 0 01.75-.75zM6 6.75A.75.75 0 016.75 6h10.5a.75.75 0 01.75.75v10.5a.75.75 0 01-.75.75H6.75a.75.75 0 01-.75-.75V6.75z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    
-                  </div>
-
-                  <p className="rounded-lg p-3 w-full border-teal-500 border-2 text-sm">
-                    {message.content}
-                  </p>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className="w-full flex justify-center pt-32 gap-5">
-          <AiFillAndroid className="text-white-900 ml-5 w-10 h-10 bg-gradient-to-r from-cyan-500 to-blue-500 rounded" />
-          <h1 className="font-bold text-3xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-md">
-            Please use the input below ⬇️
-          </h1>
-        </div>
-      )}
-
-      <div ref={messageEndRef}></div>
-
-      <form
-        onSubmit={handleSubmit}
-        className="p-5 fixed bottom-0 left-0 w-[75%] mx-auto right-0 bg-neutral-800"
-      >
-        <div className="relative flex items-center">
-          <Textarea
-            tabIndex={0}
-            required
-            rows={1}
-            value={input}
-            onChange={handleInputChange}
-            autoFocus
-            placeholder="Send message..."
-            spellCheck={false}
-            className="w-full focus:outline-none shadow-teal-700 shadow-xl placeholder:text-gray-200 text-sm text-white p-5 pr-16 rounded-xl bg-neutral-600"
-          />
-          <button
-            type="submit"
-            className="absolute bg-teal-500 p-2 rounded-lg right-0 mr-5"
+    <div className="space-y-12">
+      {/* Hero Section */}
+      <section className="text-center space-y-6">
+        <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-500">
+          Next-Generation AI Chatbot
+        </h1>
+        <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+          Experience the future of conversation with our advanced AI chatbot.
+          Powered by cutting-edge technology to provide intelligent and natural interactions.
+        </p>
+        <div className="flex justify-center gap-4">
+          <a
+            href="/chat"
+            className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-medium hover:from-purple-700 hover:to-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              className="w-5 h-5 text-white"
-            >
-              <path d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z" />
-            </svg>
-          </button>
+            Start Chatting
+          </a>
+          <a
+            href="/about"
+            className="px-6 py-3 bg-gray-800 text-white rounded-lg font-medium hover:bg-gray-700 transition-all duration-200"
+          >
+            Learn More
+          </a>
         </div>
-      </form>
+      </section>
+
+      {/* Features Section */}
+      <section className="grid md:grid-cols-3 gap-8 py-12">
+        <div className="bg-gray-800 p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200">
+          <div className="text-purple-400 text-2xl mb-4">🚀</div>
+          <h3 className="text-xl font-semibold mb-2">Lightning Fast</h3>
+          <p className="text-gray-400">Experience instant responses with our optimized AI model.</p>
+        </div>
+        <div className="bg-gray-800 p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200">
+          <div className="text-blue-400 text-2xl mb-4">💡</div>
+          <h3 className="text-xl font-semibold mb-2">Smart Conversations</h3>
+          <p className="text-gray-400">Engage in natural, context-aware discussions.</p>
+        </div>
+        <div className="bg-gray-800 p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200">
+          <div className="text-purple-400 text-2xl mb-4">🔒</div>
+          <h3 className="text-xl font-semibold mb-2">Secure & Private</h3>
+          <p className="text-gray-400">Your conversations are protected with enterprise-grade security.</p>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="text-center py-12">
+        <h2 className="text-3xl font-bold mb-4">Ready to Experience the Future?</h2>
+        <p className="text-gray-300 mb-8">Join thousands of users already enjoying our AI chatbot.</p>
+        <a
+          href="/chat"
+          className="inline-block px-8 py-4 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-medium hover:from-purple-700 hover:to-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+        >
+          Get Started Now
+        </a>
+      </section>
     </div>
   );
 }
