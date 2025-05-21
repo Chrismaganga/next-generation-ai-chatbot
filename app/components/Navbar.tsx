@@ -27,6 +27,9 @@ const Navbar = () => {
                             <Link href="/chat" className="text-white hover:bg-purple-700 px-3 py-2 rounded-md text-sm font-medium transition-colors">
                                 Chat
                             </Link>
+                            <Link href="/resume-ai" className="text-white hover:bg-purple-700 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                                Resume Builder
+                            </Link>
                             <Link href="/about" className="text-white hover:bg-purple-700 px-3 py-2 rounded-md text-sm font-medium transition-colors">
                                 About
                             </Link>
@@ -89,6 +92,9 @@ const Navbar = () => {
                         </Link>
                         <Link href="/chat" className="text-white hover:bg-purple-700 block px-3 py-2 rounded-md text-base font-medium">
                             Chat
+                        </Link>
+                        <Link href="/resume-ai" className="text-white hover:bg-purple-700 block px-3 py-2 rounded-md text-base font-medium">
+                            Resume Builder
                         </Link>
                         <Link href="/about" className="text-white hover:bg-purple-700 block px-3 py-2 rounded-md text-base font-medium">
                             About
