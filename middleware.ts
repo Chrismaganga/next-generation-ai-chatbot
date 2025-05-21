@@ -12,6 +12,21 @@ const isPublic = (path: string) => {
 
 export default authMiddleware({
   publicRoutes: ["/", "/about"],
+  afterAuth(auth, req) {
+    // Handle users who aren't authenticated
+    if (!auth.userId && !isPublic(req.nextUrl.pathname)) {
+      const signInUrl = new URL('/sign-in', req.url);
+      signInUrl.searchParams.set('redirect_url', req.url);
+      return NextResponse.redirect(signInUrl);
+    }
+
+    // Redirect authenticated users to chat if they're on the home page
+    if (auth.userId && req.nextUrl.pathname === '/') {
+      return NextResponse.redirect(new URL('/chat', req.url));
+    }
+
+    return NextResponse.next();
+  },
 });
 
 export const config = {
