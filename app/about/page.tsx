@@ -14,7 +14,7 @@ export default function AboutPage() {
                 <div className="bg-gray-800 p-6 rounded-xl shadow-lg">
                     <h2 className="text-2xl font-semibold mb-4">Our Mission</h2>
                     <p className="text-gray-300">
-                        We're dedicated to creating an AI chatbot that revolutionizes how people interact with artificial intelligence.
+                        We&apos;re dedicated to creating an AI chatbot that revolutionizes how people interact with artificial intelligence.
                         Our goal is to provide a seamless, natural, and intelligent conversation experience that helps users achieve their goals.
                     </p>
                 </div>

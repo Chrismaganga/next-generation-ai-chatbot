@@ -96,7 +96,7 @@ export default function ChatPage() {
                         Start a Conversation
                     </h1>
                     <p className="text-gray-400 text-center max-w-md">
-                        Ask me anything! I'm here to help with your questions and provide intelligent responses.
+                        Ask me anything! I&apos;m here to help with your questions and provide intelligent responses.
                     </p>
                 </div>
             )}

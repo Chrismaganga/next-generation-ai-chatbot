@@ -14,6 +14,14 @@ interface ResumeSettingsProps {
         showProfileImage: boolean;
         profileImageSize: string;
         profileImagePosition: string;
+        textColors: {
+            name: string;
+            labels: string;
+            values: string;
+            sectionTitles: string;
+            sectionContent: string;
+            links: string;
+        };
     };
     onSettingsChange: (settings: any) => void;
 }
@@ -65,14 +73,44 @@ export default function ResumeSettings({ settings, onSettingsChange }: ResumeSet
         setMounted(true);
     }, []);
 
-    const handleChange = (key: string, value: string) => {
-        onSettingsChange({ ...settings, [key]: value });
+    const handleChange = (key: string, value: any) => {
+        onSettingsChange({
+            ...settings,
+            [key]: value,
+        });
+    };
+
+    const handleTextColorChange = (key: string, value: string) => {
+        onSettingsChange({
+            ...settings,
+            textColors: {
+                ...(settings.textColors || {
+                    name: "#1f2937",
+                    labels: "#4b5563",
+                    values: "#1f2937",
+                    sectionTitles: "#8B5CF6",
+                    sectionContent: "#1f2937",
+                    links: "#3B82F6",
+                }),
+                [key]: value,
+            },
+        });
     };
 
     // Don't render anything until mounted to prevent hydration mismatch
     if (!mounted) {
         return null;
     }
+
+    // Ensure textColors exists
+    const textColors = settings.textColors || {
+        name: "#1f2937",
+        labels: "#4b5563",
+        values: "#1f2937",
+        sectionTitles: "#8B5CF6",
+        sectionContent: "#1f2937",
+        links: "#3B82F6",
+    };
 
     return (
         <div className="bg-gray-800 rounded-lg p-6 shadow-lg mb-8">
@@ -85,8 +123,8 @@ export default function ResumeSettings({ settings, onSettingsChange }: ResumeSet
                 <button
                     onClick={() => setActiveTab('colors')}
                     className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${activeTab === 'colors'
-                            ? 'bg-purple-600 text-white'
-                            : 'text-gray-300 hover:bg-gray-700'
+                        ? 'bg-purple-600 text-white'
+                        : 'text-gray-300 hover:bg-gray-700'
                         }`}
                 >
                     <FaPalette />
@@ -95,8 +133,8 @@ export default function ResumeSettings({ settings, onSettingsChange }: ResumeSet
                 <button
                     onClick={() => setActiveTab('typography')}
                     className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${activeTab === 'typography'
-                            ? 'bg-purple-600 text-white'
-                            : 'text-gray-300 hover:bg-gray-700'
+                        ? 'bg-purple-600 text-white'
+                        : 'text-gray-300 hover:bg-gray-700'
                         }`}
                 >
                     <FaFont />
@@ -105,8 +143,8 @@ export default function ResumeSettings({ settings, onSettingsChange }: ResumeSet
                 <button
                     onClick={() => setActiveTab('layout')}
                     className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${activeTab === 'layout'
-                            ? 'bg-purple-600 text-white'
-                            : 'text-gray-300 hover:bg-gray-700'
+                        ? 'bg-purple-600 text-white'
+                        : 'text-gray-300 hover:bg-gray-700'
                         }`}
                 >
                     <FaImage />
@@ -295,6 +333,115 @@ export default function ResumeSettings({ settings, onSettingsChange }: ResumeSet
                         )}
                     </div>
                 )}
+
+                {/* Text Colors Section */}
+                <div className="md:col-span-2">
+                    <h4 className="text-lg font-medium text-white mb-3">Text Colors</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-300 mb-1">Name Color</label>
+                            <div className="flex items-center space-x-2">
+                                <input
+                                    type="color"
+                                    value={textColors.name}
+                                    onChange={(e) => handleTextColorChange("name", e.target.value)}
+                                    className="w-10 h-10 rounded cursor-pointer"
+                                />
+                                <input
+                                    type="text"
+                                    value={textColors.name}
+                                    onChange={(e) => handleTextColorChange("name", e.target.value)}
+                                    className="flex-1 bg-gray-700 text-white rounded-lg p-2"
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-300 mb-1">Labels Color</label>
+                            <div className="flex items-center space-x-2">
+                                <input
+                                    type="color"
+                                    value={textColors.labels}
+                                    onChange={(e) => handleTextColorChange("labels", e.target.value)}
+                                    className="w-10 h-10 rounded cursor-pointer"
+                                />
+                                <input
+                                    type="text"
+                                    value={textColors.labels}
+                                    onChange={(e) => handleTextColorChange("labels", e.target.value)}
+                                    className="flex-1 bg-gray-700 text-white rounded-lg p-2"
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-300 mb-1">Values Color</label>
+                            <div className="flex items-center space-x-2">
+                                <input
+                                    type="color"
+                                    value={textColors.values}
+                                    onChange={(e) => handleTextColorChange("values", e.target.value)}
+                                    className="w-10 h-10 rounded cursor-pointer"
+                                />
+                                <input
+                                    type="text"
+                                    value={textColors.values}
+                                    onChange={(e) => handleTextColorChange("values", e.target.value)}
+                                    className="flex-1 bg-gray-700 text-white rounded-lg p-2"
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-300 mb-1">Section Titles Color</label>
+                            <div className="flex items-center space-x-2">
+                                <input
+                                    type="color"
+                                    value={textColors.sectionTitles}
+                                    onChange={(e) => handleTextColorChange("sectionTitles", e.target.value)}
+                                    className="w-10 h-10 rounded cursor-pointer"
+                                />
+                                <input
+                                    type="text"
+                                    value={textColors.sectionTitles}
+                                    onChange={(e) => handleTextColorChange("sectionTitles", e.target.value)}
+                                    className="flex-1 bg-gray-700 text-white rounded-lg p-2"
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-300 mb-1">Section Content Color</label>
+                            <div className="flex items-center space-x-2">
+                                <input
+                                    type="color"
+                                    value={textColors.sectionContent}
+                                    onChange={(e) => handleTextColorChange("sectionContent", e.target.value)}
+                                    className="w-10 h-10 rounded cursor-pointer"
+                                />
+                                <input
+                                    type="text"
+                                    value={textColors.sectionContent}
+                                    onChange={(e) => handleTextColorChange("sectionContent", e.target.value)}
+                                    className="flex-1 bg-gray-700 text-white rounded-lg p-2"
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-300 mb-1">Links Color</label>
+                            <div className="flex items-center space-x-2">
+                                <input
+                                    type="color"
+                                    value={textColors.links}
+                                    onChange={(e) => handleTextColorChange("links", e.target.value)}
+                                    className="w-10 h-10 rounded cursor-pointer"
+                                />
+                                <input
+                                    type="text"
+                                    value={textColors.links}
+                                    onChange={(e) => handleTextColorChange("links", e.target.value)}
+                                    className="flex-1 bg-gray-700 text-white rounded-lg p-2"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );

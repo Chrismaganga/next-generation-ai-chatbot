@@ -11,7 +11,7 @@ const isPublic = (path: string) => {
 };
 
 export default authMiddleware({
-  publicRoutes: ["/", "/about"],
+  publicRoutes: ["/", "/about", "/pricing", "/sign-in", "/sign-up"],
   afterAuth(auth, req) {
     // Handle users who aren't authenticated
     if (!auth.userId && !isPublic(req.nextUrl.pathname)) {
@@ -30,5 +30,7 @@ export default authMiddleware({
 });
 
 export const config = {
-  matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
-}; 
+  matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'],
+};
+
+export const runtime = 'nodejs'; 

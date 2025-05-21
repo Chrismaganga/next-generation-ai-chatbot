@@ -1,11 +1,15 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { useAuth } from "@clerk/nextjs";
+import { useAuth, useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import { FaPlus, FaTrash, FaEdit, FaMagic, FaTimes, FaUser, FaCog, FaUpload, FaCamera } from "react-icons/fa";
+import { FaPlus, FaTrash, FaEdit, FaMagic, FaTimes, FaUser, FaCog, FaUpload, FaCamera, FaDownload } from "react-icons/fa";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import ResumeSettings from "../components/ResumeSettings";
+import ResumePDF from "../components/ResumePDF";
+import ResumeDownloadButton from "../components/ResumeDownloadButton";
+import { toast } from "react-hot-toast";
+import Image from 'next/image';
 
 interface ResumeSection {
     id: string;
@@ -47,10 +51,19 @@ const DEFAULT_SETTINGS = {
     showProfileImage: false,
     profileImageSize: "medium",
     profileImagePosition: "center",
+    textColors: {
+        name: "#1f2937",
+        labels: "#4b5563",
+        values: "#1f2937",
+        sectionTitles: "#8B5CF6",
+        sectionContent: "#1f2937",
+        links: "#3B82F6",
+    },
 };
 
 export default function ResumeAI() {
-    const { isSignedIn, user } = useAuth();
+    const { isSignedIn } = useAuth();
+    const { user } = useUser();
     const router = useRouter();
     const [mounted, setMounted] = useState(false);
     const [settings, setSettings] = useState(DEFAULT_SETTINGS);
@@ -80,6 +93,13 @@ export default function ResumeAI() {
     useEffect(() => {
         setMounted(true);
     }, []);
+
+    // Handle authentication
+    useEffect(() => {
+        if (!isSignedIn) {
+            router.push("/sign-in");
+        }
+    }, [isSignedIn, router]);
 
     const handleDragEnd = (result: any) => {
         if (!result.destination) return;
@@ -206,13 +226,65 @@ export default function ResumeAI() {
         }
     };
 
-    if (!isSignedIn) {
-        router.push("/sign-in");
-        return null;
-    }
+    const handleDownloadComplete = () => {
+        // Clear personal info
+        setPersonalInfo({
+            fullName: '',
+            email: '',
+            phone: '',
+            location: '',
+            linkedin: '',
+            website: '',
+            profileImage: '',
+        });
+
+        // Clear sections
+        setSections([]);
+
+        // Reset settings to default
+        setSettings({
+            primaryColor: '#2563eb',
+            secondaryColor: '#059669',
+            fontFamily: 'Arial',
+            fontSize: 'medium',
+            headerSize: 'large',
+            spacing: 'medium',
+            layout: 'modern',
+            showProfileImage: true,
+            profileImageSize: 'medium',
+            profileImagePosition: 'left',
+            textColors: {
+                name: "#1f2937",
+                labels: "#4b5563",
+                values: "#1f2937",
+                sectionTitles: "#8B5CF6",
+                sectionContent: "#1f2937",
+                links: "#3B82F6",
+            },
+        });
+
+        // Show success message
+        toast.success('Resume downloaded successfully! Form has been cleared.');
+    };
+
+    const handleSettingsChange = (newSettings: any) => {
+        console.log('Settings updated:', newSettings); // Debug log
+        setSettings(prevSettings => ({
+            ...prevSettings,
+            ...newSettings,
+            textColors: {
+                ...prevSettings.textColors,
+                ...(newSettings.textColors || {}),
+            },
+        }));
+    };
 
     // Don't render anything until mounted to prevent hydration mismatch
     if (!mounted) {
+        return null;
+    }
+
+    if (!isSignedIn) {
         return null;
     }
 
@@ -243,7 +315,7 @@ export default function ResumeAI() {
                 {showSettings && (
                     <ResumeSettings
                         settings={settings}
-                        onSettingsChange={setSettings}
+                        onSettingsChange={handleSettingsChange}
                     />
                 )}
 
@@ -260,9 +332,11 @@ export default function ResumeAI() {
                                 <div className="relative">
                                     {personalInfo.profileImage ? (
                                         <div className="relative group">
-                                            <img
+                                            <Image
                                                 src={personalInfo.profileImage}
                                                 alt="Profile"
+                                                width={parseInt(settings.profileImageSize) * 4}
+                                                height={parseInt(settings.profileImageSize) * 4}
                                                 className={`${getImageSizeClass(settings.profileImageSize)} rounded-full object-cover border-2 border-purple-500`}
                                             />
                                             <button
@@ -391,14 +465,14 @@ export default function ResumeAI() {
                                                             className="p-2 text-purple-400 hover:text-purple-300 transition-colors"
                                                             title="Generate with AI"
                                                         >
-                                                            <FaMagic />
+                                                            <FaMagic className="w-5 h-5" />
                                                         </button>
                                                         <button
                                                             onClick={() => deleteSection(section.id)}
                                                             className="p-2 text-red-400 hover:text-red-300 transition-colors"
                                                             title="Delete"
                                                         >
-                                                            <FaTrash />
+                                                            <FaTrash className="w-5 h-5" />
                                                         </button>
                                                     </div>
                                                 </div>
@@ -429,20 +503,58 @@ export default function ResumeAI() {
                     </button>
                 </div>
 
-                <div className="mt-8 flex justify-center space-x-4">
+                <div className="mt-8 flex justify-center space-x-4 print:hidden">
                     <button
                         onClick={() => setShowPreview(true)}
-                        className="px-6 py-3 bg-gray-700 text-white rounded-lg font-medium hover:bg-gray-600 transition-all duration-200"
+                        className="flex items-center space-x-2 px-6 py-3 bg-gray-700 text-white rounded-lg font-medium hover:bg-gray-600 transition-all duration-200 cursor-pointer active:scale-95"
                     >
-                        Preview Resume
+                        <FaEdit className="w-5 h-5" />
+                        <span>Preview Resume</span>
                     </button>
-                    <button
-                        onClick={() => window.print()}
-                        className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-medium hover:from-purple-700 hover:to-blue-700 transition-all duration-200"
-                    >
-                        Download PDF
-                    </button>
+                    <ResumeDownloadButton
+                        personalInfo={personalInfo}
+                        sections={sections}
+                        settings={settings}
+                        onDownloadComplete={handleDownloadComplete}
+                    />
                 </div>
+
+                {/* Add print styles */}
+                <style jsx global>{`
+                    @media print {
+                        .print\\:hidden {
+                            display: none !important;
+                        }
+                        body {
+                            background: white !important;
+                        }
+                        .bg-gray-900, .bg-gray-800, .bg-gray-700 {
+                            background: white !important;
+                        }
+                        .text-white, .text-gray-300 {
+                            color: black !important;
+                        }
+                    }
+
+                    /* Add hover and active states for buttons */
+                    button, a {
+                        cursor: pointer;
+                        transition: all 0.2s ease-in-out;
+                    }
+
+                    button:hover, a:hover {
+                        transform: translateY(-1px);
+                    }
+
+                    button:active, a:active {
+                        transform: translateY(1px);
+                    }
+
+                    /* Disable pointer events when loading */
+                    .cursor-wait {
+                        pointer-events: none;
+                    }
+                `}</style>
             </div>
 
             {/* Add Section Modal */}
@@ -513,9 +625,11 @@ export default function ResumeAI() {
                             <div className="text-center border-b border-gray-200 pb-4">
                                 {settings.showProfileImage && personalInfo.profileImage && (
                                     <div className={`flex ${getImagePositionClass(settings.profileImagePosition)} mb-4`}>
-                                        <img
+                                        <Image
                                             src={personalInfo.profileImage}
                                             alt="Profile"
+                                            width={parseInt(settings.profileImageSize) * 4}
+                                            height={parseInt(settings.profileImageSize) * 4}
                                             className={`${getImageSizeClass(settings.profileImageSize)} rounded-full object-cover border-2`}
                                             style={{ borderColor: settings.primaryColor }}
                                         />

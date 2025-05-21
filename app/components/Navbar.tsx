@@ -1,12 +1,22 @@
-'use client';
-
+"use client";
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useState } from 'react';
-import { UserButton, SignInButton, useUser } from '@clerk/nextjs';
+import { useAuth, SignInButton, UserButton } from '@clerk/nextjs';
 
 const Navbar = () => {
+    const { isSignedIn } = useAuth();
     const [isOpen, setIsOpen] = useState(false);
-    const { isSignedIn, user } = useUser();
+    const [mounted, setMounted] = useState(false);
+
+    // Handle hydration
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    // Don't render anything until mounted to prevent hydration mismatch
+    if (!mounted) {
+        return null;
+    }
 
     return (
         <nav className="bg-gradient-to-r from-purple-600 to-blue-600 shadow-lg">
